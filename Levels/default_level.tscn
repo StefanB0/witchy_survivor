@@ -1,0 +1,138 @@
+[gd_scene load_steps=12 format=3 uid="uid://cdulw2vjht3rq"]
+
+[ext_resource type="Script" path="res://addons/phantom_camera/scripts/phantom_camera/phantom_camera_2D.gd" id="1_28yu7"]
+[ext_resource type="Script" path="res://addons/phantom_camera/scripts/phantom_camera_host/phantom_camera_host.gd" id="1_uygnj"]
+[ext_resource type="Script" path="res://Levels/default_level.gd" id="1_yodxw"]
+[ext_resource type="PackedScene" uid="uid://dicrujwblwyi0" path="res://Characters/player/player.tscn" id="2_pyw14"]
+[ext_resource type="Script" path="res://Scripts/TreeGenerator.gd" id="3_hmmph"]
+[ext_resource type="Texture2D" uid="uid://qddi87fxwavt" path="res://Art/environment/ForestVegetation/forest_tiles_trees.png" id="3_xqwmr"]
+[ext_resource type="Script" path="res://Levels/Spawner.gd" id="7_mwidt"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_bo0kl"]
+font_size = 64
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_jr0lu"]
+texture = ExtResource("3_xqwmr")
+0:0/size_in_atlas = Vector2i(2, 3)
+0:0/0 = 0
+0:0/0/physics_layer_0/linear_velocity = Vector2(0, 0)
+0:0/0/physics_layer_0/angular_velocity = 0.0
+0:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-4, 4, 4, 4, 8, 16, -8, 16)
+2:0/size_in_atlas = Vector2i(2, 3)
+2:0/0 = 0
+2:0/0/physics_layer_0/linear_velocity = Vector2(0, 0)
+2:0/0/physics_layer_0/angular_velocity = 0.0
+2:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-4, 4, 4, 4, 8, 16, -8, 16)
+
+[sub_resource type="TileSet" id="TileSet_ubebp"]
+physics_layer_0/collision_layer = 1
+sources/0 = SubResource("TileSetAtlasSource_jr0lu")
+
+[sub_resource type="Curve2D" id="Curve2D_vcl2n"]
+_data = {
+"points": PackedVector2Array(0, 0, 0, 0, -225, -348, 0, 0, 0, 0, -50, -387, 0, 0, 0, 0, 125, -390, 0, 0, 0, 0, 305, -375, 0, 0, 0, 0, 435, -345, 0, 0, 0, 0, 536, -274, 0, 0, 0, 0, 584, -151, 0, 0, 0, 0, 588, 10, 0, 0, 0, 0, 544, 207, 0, 0, 0, 0, 462, 323, 0, 0, 0, 0, 317, 356, 0, 0, 0, 0, 127, 367, 0, 0, 0, 0, -41, 356, 0, 0, 0, 0, -206, 355, 0, 0, 0, 0, -346, 340, 0, 0, 0, 0, -475, 239, 0, 0, 0, 0, -509, 129, 0, 0, 0, 0, -509, -37, 0, 0, 0, 0, -494, -158, 0, 0, 0, 0, -225, -348)
+}
+point_count = 20
+
+[node name="Level" type="Node2D"]
+y_sort_enabled = true
+script = ExtResource("1_yodxw")
+
+[node name="Camera2D" type="Camera2D" parent="."]
+position = Vector2(21, 22)
+zoom = Vector2(1.75, 1.75)
+
+[node name="PhantomCameraHost" type="Node" parent="Camera2D"]
+script = ExtResource("1_uygnj")
+
+[node name="PhantomCamera2D" type="Node2D" parent="."]
+position = Vector2(21, 22)
+script = ExtResource("1_28yu7")
+priority_override = false
+priority = 1
+zoom = Vector2(1.75, 1.75)
+follow_mode = 2
+follow_target = NodePath("../Player")
+follow_parameters/target_offset = Vector2(0, 0)
+follow_parameters/damping = true
+follow_parameters/damping_value = 5.0
+frame_preview = true
+pixel_perfect = false
+limit/draw_limits = true
+limit/left = -10000000
+limit/top = -10000000
+limit/right = 10000000
+limit/bottom = 10000000
+limit/limit_node_target = NodePath("")
+limit/smoothed = false
+tween_parameters = null
+tween_on_load = true
+inactive_update_mode = 0
+
+[node name="ColorRect" type="ColorRect" parent="PhantomCamera2D"]
+z_index = -10
+offset_left = -339.0
+offset_top = -192.0
+offset_right = 355.0
+offset_bottom = 205.0
+color = Color(0.356863, 0.588235, 0.223529, 1)
+
+[node name="GameOverShade" type="ColorRect" parent="PhantomCamera2D"]
+unique_name_in_owner = true
+visible = false
+z_index = 10
+z_as_relative = false
+offset_left = -337.0
+offset_top = -190.0
+offset_right = 341.0
+offset_bottom = 194.0
+color = Color(0, 0, 0, 0.431373)
+
+[node name="Label" type="Label" parent="PhantomCamera2D/GameOverShade"]
+layout_mode = 0
+offset_left = 148.0
+offset_top = 195.0
+offset_right = 515.0
+offset_bottom = 283.0
+text = "Game Over"
+label_settings = SubResource("LabelSettings_bo0kl")
+horizontal_alignment = 1
+vertical_alignment = 1
+uppercase = true
+
+[node name="TreesTileMap" type="TileMap" parent="."]
+unique_name_in_owner = true
+z_as_relative = false
+y_sort_enabled = true
+texture_filter = 1
+tile_set = SubResource("TileSet_ubebp")
+format = 2
+layer_0/name = "Trees                "
+layer_0/y_sort_enabled = true
+
+[node name="TreeGenerator" type="Node2D" parent="." node_paths=PackedStringArray("player")]
+script = ExtResource("3_hmmph")
+player = NodePath("../Player")
+
+[node name="Logger" type="Timer" parent="TreeGenerator"]
+wait_time = 3.0
+autostart = true
+
+[node name="Player" parent="." node_paths=PackedStringArray("Game_Over_Shade") instance=ExtResource("2_pyw14")]
+unique_name_in_owner = true
+position = Vector2(21, 22)
+Game_Over_Shade = NodePath("../PhantomCamera2D/GameOverShade")
+
+[node name="Path2D" type="Path2D" parent="Player"]
+curve = SubResource("Curve2D_vcl2n")
+
+[node name="Spawner" type="PathFollow2D" parent="Player/Path2D" node_paths=PackedStringArray("Spawn_Timer")]
+position = Vector2(-225, -348)
+rotation = -0.219274
+script = ExtResource("7_mwidt")
+Spawn_Timer = NodePath("SpawnTimer")
+
+[node name="SpawnTimer" type="Timer" parent="Player/Path2D/Spawner"]
+autostart = true
+
+[connection signal="timeout" from="Player/Path2D/Spawner/SpawnTimer" to="Player/Path2D/Spawner" method="_on_spawn_timer_timeout"]

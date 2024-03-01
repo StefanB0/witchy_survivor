@@ -1,0 +1,27 @@
+[gd_scene load_steps=4 format=3 uid="uid://bpypwlroi46hw"]
+
+[ext_resource type="Script" path="res://Characters/player/ice_projectile.gd" id="1_8j486"]
+[ext_resource type="Texture2D" uid="uid://di6rm2b0snfgn" path="res://Art/vfx/Water Effect and Bullet 16x16.png" id="1_drb7v"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_nrosj"]
+radius = 4.0
+
+[node name="IceProjectile" type="Area2D"]
+top_level = true
+light_mask = 3
+visibility_layer = 3
+script = ExtResource("1_8j486")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_nrosj")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture_filter = 1
+position = Vector2(-3, 0)
+rotation = -1.5708
+texture = ExtResource("1_drb7v")
+region_enabled = true
+region_rect = Rect2(48, 96, 16, 16)
+
+[connection signal="area_entered" from="." to="." method="_on_area_entered"]
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]
